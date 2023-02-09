@@ -11,18 +11,18 @@ module.exports = class Cart {
 
     //region public methods
     constructor(items) {
-        this.#items = items;
+        this.add(items);
     }
 
     get items() {
-        if (this.#items == null) {
+        if (this.#items === null) {
             throw new EmptyCartException();
         }
         return this.#items;
     }
 
     get total() {
-        if (this.#items == null) {
+        if (this.#items === null) {
             throw new EmptyCartException();
         }
         let total = 0;
@@ -33,13 +33,12 @@ module.exports = class Cart {
     }
 
     count(distinct = false) {
-        if (this.#items == null) {
+        if (this.#items === null) {
             throw new EmptyCartException();
-        }
-        let count = 0;
-        if (distinct) {
+        } else if (distinct) {
             return this.#items.length;
         }
+        let count = 0;
         this.#items.forEach(item => {
             count += item.quantity;
         });
@@ -47,7 +46,7 @@ module.exports = class Cart {
     }
 
     add(items) {
-        if (items == null) {
+        if (this.#items === null && items === null) {
             throw new UpdateCartException();
         }
         this.#items = items;
