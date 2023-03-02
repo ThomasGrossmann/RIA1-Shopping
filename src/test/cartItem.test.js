@@ -1,5 +1,5 @@
 /**
- * @file      cart.test.js
+ * @file      cartCustomCurrency.test.js
  * @brief     This class is designed to test the behaviour of a cartItem.
  * @author    Created by Nicolas.GLASSEY
  * @version   13-02-2022 - original (dedicated to RIA1)
@@ -12,13 +12,15 @@ let CartItem =  require('../CartItem/CartItem.js');
 const InvalidArticleIdException = require("../CartItem/InvalidArticleIdException.js");
 const InvalidQuantityException = require("../CartItem/InvalidQuantityException.js");
 const InvalidPriceException = require("../CartItem/InvalidPriceException.js");
+const InvalidCurrencyException = require("../CartItem/InvalidCurrencyException.js");
 
-test('allGetters_NominalCase_Success', () => {
+test('allGetters_NominalCaseWithDefaultCurrency_Success', () => {
     //given
     let articleId = 1;
     let name = "Iphone 27";
     let quantity = 10;
     let price = 20;
+    let currency = "CHF";
     let cartItem = new CartItem(articleId, name, quantity, price);
     let total = 200;
 
@@ -26,11 +28,49 @@ test('allGetters_NominalCase_Success', () => {
     //we call the getters directly in assertion below
 
     //then
-    expect(articleId).toEqual(cartItem.articleId);
-    expect(articleId).toEqual(cartItem.articleId);
-    expect(quantity).toEqual(cartItem.quantity);
-    expect(price).toEqual(cartItem.price);
-    expect(total).toEqual(cartItem.total);
+    expect(cartItem.articleId).toEqual(articleId);
+    expect(cartItem.name).toEqual(name);
+    expect(cartItem.quantity).toEqual(quantity);
+    expect(cartItem.price).toEqual(price);
+    expect(cartItem.currency).toEqual(currency);
+    expect(cartItem.total).toEqual(total);
+})
+
+test('allGetters_NominalCaseWithValidCustomCurrency_Success', () => {
+    //given
+    let articleId = 1;
+    let name = "Iphone 27";
+    let quantity = 10;
+    let price = 20;
+    let currency = "USD";
+    let cartItem = new CartItem(articleId, name, quantity, price, currency);
+    let total = 200;
+
+    //when
+    //we call the getters directly in assertion below
+
+    //then
+    expect(cartItem.articleId).toEqual(articleId);
+    expect(cartItem.name).toEqual(name);
+    expect(cartItem.quantity).toEqual(quantity);
+    expect(cartItem.price).toEqual(price);
+    expect(cartItem.currency).toEqual(currency);
+    expect(cartItem.total).toEqual(total);
+})
+
+test('allGetters_NominalCaseWithInvalidCustomCurrency_ThrowException', () => {
+    //given
+    let articleId = 1;
+    let name = "Iphone 27";
+    let quantity = 10;
+    let price = 20;
+    let currency = "US";
+
+    //when
+    expect(() => new CartItem(articleId, name, quantity, price, currency)).toThrow(InvalidCurrencyException);
+
+    //then
+    //Exception is thrown
 })
 
 test('constructor_InvalidArticleId_ThrowException', () => {
@@ -89,8 +129,8 @@ test('quantity_setQuantityNominalCase_Success', () => {
     cartItem.quantity = expectedQuantity;
 
     //then
-    expect(expectedQuantity).toEqual(cartItem.quantity);
-    expect(expectedTotal).toEqual(cartItem.total);
+    expect(cartItem.quantity).toEqual(expectedQuantity);
+    expect(cartItem.total).toEqual(expectedTotal);
 })
 
 test('quantity_setQuantityInvalidValue_ThrowException', () => {
@@ -123,8 +163,8 @@ test('price_setPriceNominalCase_Success', () => {
     cartItem.price = expectedPrice;
 
     //then
-    expect(expectedPrice).toEqual(cartItem.price);
-    expect(expectedTotal).toEqual(cartItem.total);
+    expect(cartItem.price).toEqual(expectedPrice);
+    expect(cartItem.total).toEqual(expectedTotal);
 })
 
 test('price_setPriceInvalidPrice_ThrowException', () => {
