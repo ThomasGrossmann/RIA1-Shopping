@@ -3,6 +3,7 @@
 const InvalidArticleIdException = require("./InvalidArticleIdException.js");
 const InvalidQuantityException = require("./InvalidQuantityException.js");
 const InvalidPriceException = require("./InvalidPriceException.js");
+const InvalidCurrencyException = require("./InvalidCurrencyException.js");
 
 module.exports = class CartItem {
 
@@ -11,17 +12,22 @@ module.exports = class CartItem {
     #name;
     #quantity;
     #price;
+    #currency;
     //endregion private attributes
 
     //region public methods
-    constructor(articleId, name, quantity, price) {
+    constructor(articleId, name, quantity, price, currency = "CHF") {
         if (articleId < 1) {
             throw new InvalidArticleIdException();
+        }
+        if (currency.length !== 3) {
+            throw new InvalidCurrencyException();
         }
         this.#articleId = articleId;
         this.#name = name;
         this.quantity = quantity;
         this.price = price;
+        this.#currency = currency;
     }
 
     get articleId() {
@@ -52,6 +58,10 @@ module.exports = class CartItem {
             throw new InvalidPriceException();
         }
         this.#price = value;
+    }
+
+    get currency() {
+        return this.#currency;
     }
 
     get total() {
