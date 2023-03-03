@@ -3,7 +3,7 @@
  * @brief     This class is designed to test the behaviour of a cart.
  * @author    Created by Nicolas.GLASSEY
  * @version   13-02-2022 - original (dedicated to RIA1)
- * @version   27-02-2023 - update for first eval
+ * @version   03-03-2023 - update for second eval
  */
 
 "use strict";
@@ -188,4 +188,56 @@ test('add_AddMoreItemsWithAnotherCurrency_ThrowException', () => {
 
     //then
     //Exception is thrown
+})
+
+test('reset_CartWithCustomCurrency_Success', () => {
+    //given
+    let cart = new Cart();
+    let items = [new CartItem(1, "Iphone 27", 1, 10, "USD")];
+    cart.add(items);
+    let expectedItems = [];
+    let expectedCurrency = "CHF";
+    let expectedTotal = 0;
+
+    //when
+    cart.reset();
+
+    //then
+    expect(cart.items).toEqual(expectedItems);
+    expect(cart.currency).toEqual(expectedCurrency);
+    expect(cart.total).toEqual(expectedTotal);
+})
+
+test('priceAverage_CartWithSingleArticles_Success', () => {
+    //given
+    let cart = new Cart();
+    let item1 = new CartItem(1, "Iphone 27", 1, 10, "USD");
+    let item2 = new CartItem(1, "Iphone 27", 1, 20, "USD");
+    let item3 = new CartItem(1, "Iphone 27", 1, 30, "USD")
+    let items = [item1, item2, item3];
+    cart.add(items);
+    let expectedPriceAverage = 20;
+
+    //when
+    //Event triggered by th assertion
+
+    //then
+    expect(cart.priceAverage()).toEqual(expectedPriceAverage);
+})
+
+test('priceAverage_CartWithMultipleArticles_Success', () => {
+    //given
+    let cart = new Cart();
+    let item1 = new CartItem(1, "Iphone 27", 2, 10, "USD");
+    let item2 = new CartItem(1, "Iphone 27", 1, 20, "USD");
+    let item3 = new CartItem(1, "Iphone 27", 5, 30, "USD")
+    let items = [item1, item2, item3];
+    cart.add(items);
+    let expectedPriceAverage = 23.75;
+
+    //when
+    //Event triggered by th assertion
+
+    //then
+    expect(cart.priceAverage()).toEqual(expectedPriceAverage);
 })

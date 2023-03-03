@@ -3,7 +3,7 @@
  * @brief     This class is designed to test the behaviour of a cartItem.
  * @author    Created by Nicolas.GLASSEY
  * @version   13-02-2022 - original (dedicated to RIA1)
- * @version   08-03-2022 - update
+ * @version   @version   03-03-2023 - update for second eval
  */
 
 "use strict";
@@ -13,6 +13,7 @@ const InvalidArticleIdException = require("../CartItem/InvalidArticleIdException
 const InvalidQuantityException = require("../CartItem/InvalidQuantityException.js");
 const InvalidPriceException = require("../CartItem/InvalidPriceException.js");
 const InvalidCurrencyException = require("../CartItem/InvalidCurrencyException.js");
+const InvalidNameException = require("../CartItem/InvalidNameException.js");
 
 test('allGetters_NominalCaseWithDefaultCurrency_Success', () => {
     //given
@@ -110,6 +111,34 @@ test('constructor_InvalidPrice_ThrowException', () => {
 
     //when
     expect(() => new CartItem(articleId, name, quantity, price)).toThrow(InvalidPriceException);
+
+    //then
+    //Exception is thrown
+})
+
+test('constructor_InvalidNameTooLong_ThrowException', () => {
+    //given
+    let articleId = 1;
+    let name = "A very too long article item";//Invalid name (longer than 20)
+    let quantity = 10;
+    let price = 20;
+
+    //when
+    expect(() => new CartItem(articleId, name, quantity, price)).toThrow(InvalidNameException);
+
+    //then
+    //Exception is thrown
+})
+
+test('constructor_InvalidNameTooShort_ThrowException', () => {
+    //given
+    let articleId = 1;
+    let name = "A";//Invalid name (shorter than 3)
+    let quantity = 10;
+    let price = 20;
+
+    //when
+    expect(() => new CartItem(articleId, name, quantity, price)).toThrow(InvalidNameException);
 
     //then
     //Exception is thrown
