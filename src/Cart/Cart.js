@@ -13,7 +13,7 @@ module.exports = class Cart {
 
     //region public methods
     constructor(items = []) {
-        this.#currency = this.getItemsCurrency(items);
+        this.currency = this.getItemsCurrency(items);
         this.add(items);
     }
 
@@ -47,11 +47,7 @@ module.exports = class Cart {
         if (this.#items === null) {
             throw new EmptyCartException();
         }
-        let total = 0;
-        this.#items.forEach(item => {
-            total += item.quantity * item.price;
-        });
-        return total / this.count();
+        return this.total / this.count();
     }
 
     count(distinct = false) {
