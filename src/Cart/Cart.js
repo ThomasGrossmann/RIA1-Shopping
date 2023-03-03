@@ -24,6 +24,14 @@ module.exports = class Cart {
         return this.#items;
     }
 
+    get currency() {
+        return this.#currency;
+    }
+
+    set currency(currency) {
+        this.#currency = currency;
+    }
+
     get total() {
         if (this.#items === null) {
             throw new EmptyCartException();
@@ -35,8 +43,15 @@ module.exports = class Cart {
         return total;
     }
 
-    get currency() {
-        return this.#currency;
+    priceAverage() {
+        if (this.#items === null) {
+            throw new EmptyCartException();
+        }
+        let total = 0;
+        this.#items.forEach(item => {
+            total += item.quantity * item.price;
+        });
+        return total / this.count();
     }
 
     count(distinct = false) {
@@ -53,11 +68,8 @@ module.exports = class Cart {
     }
 
     add(items) {
-        if (this.#items === null && items === null) {
-            throw new UpdateCartException();
-        }
         items.forEach(item => {
-            if (item.currency !== this.#currency) {
+            if (item.currency !== this.getItemsCurrency(items)) {
                 throw new MultipleCurrenciesException();
             }
         });
@@ -68,13 +80,17 @@ module.exports = class Cart {
         if (items.length === 0) {
             return defaultCurrency
         }
-        const selectedCurrency = items[0].currency
+        let selectedCurrency = items[0].currency
         items.forEach((item) => {
           if (item.currency !== selectedCurrency) {
             throw new MultipleCurrenciesException()
           }
-        })
+        });
         return selectedCurrency
+    }
+
+    reset() {
+        this.#items = [];
     }
     //endregion public methods
 }
